@@ -20,6 +20,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
+
 import argparse
 import asyncio
 import pathlib
@@ -40,10 +41,10 @@ RELEASES = 'https://api.github.com/repos/freyacodes/Lavalink/releases/latest'
 JAVA = 'https://download.oracle.com/java/17/archive/jdk-17.0.3.1_windows-x64_bin.exe'
 
 
-if get_java and sys.platform != 'win32':
-    raise RuntimeError('Downloading and installing Java is only supported on Windows.')
-
 if get_java:
+    if sys.platform != 'win32':
+        raise RuntimeError('Downloading and installing Java is only supported on Windows.')
+
     import ctypes
     import os
 
@@ -157,7 +158,7 @@ async def download(location: pathlib.Path, *, url: str) -> None:
 
 
 def parse_input(value: str, type_: typing.Any) -> typing.Union[str, int, bool, None]:
-    value = str(value)
+    value = value
 
     quits = ('q', 'quit', 'exit')
     if value.lower() in quits:
@@ -167,10 +168,7 @@ def parse_input(value: str, type_: typing.Any) -> typing.Union[str, int, bool, N
     if type_ is bool:
 
         bools = {'y': True, 'yes': True, 'true': True, 'n': False, 'no': False, 'false': False}
-        result = bools.get(value.lower(), None)
-
-        return result
-
+        return bools.get(value.lower())
     try:
         result = type_(value.lower())
     except ValueError:
